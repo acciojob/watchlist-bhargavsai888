@@ -37,6 +37,10 @@ public class MovieRepository {
        Movie movie=movieDb.get(name);
        return movie;
    }
+    public Director getDirectorByName(String name){
+        Director director=directorDb.get(name);
+        return director;
+    }
    public String getDirectorByMovieName(String name){
       if(directorDb.containsKey(name)){
            String director=directorDb.get(name).getName();
@@ -76,6 +80,6 @@ public class MovieRepository {
         }
        movieDirector.clear();
        directorDb.clear();
-       return "All Director deleted successfully";
+       return "Director deleted successfully";
    }
 }

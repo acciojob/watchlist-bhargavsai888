@@ -22,6 +22,9 @@ public String addMovieDirectorPair(String director,String movie){
     String message=movieRepository.addMovieDirectorPair(director,movie);
     return message;
 }
+  public  Director getDirectorByName(String name){
+        return movieRepository.getDirectorByName(name);
+    }
 public Movie getMovieByName(String name){
     Movie response=movieRepository.getMovieByName(name);
     return response;
