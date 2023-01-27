@@ -41,13 +41,13 @@ public class MovieRepository {
         Director director=directorDb.get(name);
         return director;
     }
-   public String getDirectorByMovieName(String name){
-      if(directorDb.containsKey(name)){
-           String director=directorDb.get(name).getName();
-           return director;
-       }
-       return null;
-   }
+//   public String getDirectorByMovieName(String name){
+//      if(directorDb.containsKey(name)){
+//           String director=directorDb.get(name).getName();
+//           return director;
+//       }
+//       return null;
+//   }
    public List<String> getMoviesByDirectorName(String name){
        for(String director:movieDirector.keySet()){
            if (director.equals(name)) {

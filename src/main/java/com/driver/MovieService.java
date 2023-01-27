@@ -23,16 +23,17 @@ public String addMovieDirectorPair(String director,String movie){
     return message;
 }
   public  Director getDirectorByName(String name){
-        return movieRepository.getDirectorByName(name);
+
+    return movieRepository.getDirectorByName(name);
     }
 public Movie getMovieByName(String name){
     Movie response=movieRepository.getMovieByName(name);
     return response;
 }
-public String getDirectorByMovieName(String name){
-    String result=movieRepository.getDirectorByMovieName(name);
-    return result;
-}
+//public String getDirectorByMovieName(String name){
+//    String result=movieRepository.getDirectorByMovieName(name);
+//    return result;
+//}
 public List<String> getMoviesByDirectorName(String name){
     List<String> moviesList=movieRepository.getMoviesByDirectorName(name);
     return moviesList;
