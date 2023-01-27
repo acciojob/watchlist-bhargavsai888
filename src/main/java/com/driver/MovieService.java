@@ -8,7 +8,7 @@ import java.util.List;
 @Service
 public class MovieService {
      @Autowired
-     private MovieRepository movieRepository;
+      MovieRepository movieRepository;
 
 public String addMovie(Movie movie){
     String message=movieRepository.addMovie(movie);

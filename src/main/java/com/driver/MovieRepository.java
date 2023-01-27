@@ -16,28 +16,41 @@ public class MovieRepository {
     List<String>allMovies=new ArrayList<>(); // for All Movies
 
     public String addMovie(Movie movie){
-        String name=movie.getName();
-        movieDb.put(name,movie);
-        allMovies.add(movie.getName());
-        return "Success";
+        String name = movie.getName();
+        if(!movieDb.containsKey(name)) {
+            movieDb.put(name, movie);
+        }
+        return "Movie added successfully";
     }
-    public String addDirector(Director director){
-        String name=director.getName();
-        directorDb.put(name,director);
-        return "Success";
+
+    // 2 Add a director
+    public String addDirector(Director dir){
+        String name = dir.getName();
+        if(!directorDb.containsKey(name)){
+            directorDb.put(name, dir);
+        }
+        return "Director added successfully";
     }
     public String addMovieDirectorPair(String movie,String director){
-        if (!movieDirector.containsKey(director)) {
-            movieDirector.put(director,new ArrayList<>());
+        if(!movieDb.containsKey(movie) || !directorDb.containsKey(director)) return "Movie or Director not found in data base";
+        if(movieDirector.containsKey(director)){
+            movieDirector.get(director).add(movie);
+        }else{
+            List<String> ans = new ArrayList<>();
+            ans.add(movie);
+            movieDirector.put(director, ans);
         }
-        movieDirector.get(director).add(movie);
-        return "Movie Director pair added";
+        return "Movie-Director Pair added successfully";
     }
    public Movie getMovieByName(String name){
+        if(!movieDb.containsKey(name)){
+            return null;
+        }
        Movie movie=movieDb.get(name);
        return movie;
    }
     public Director getDirectorByName(String name){
+        if(!directorDb.containsKey(name))return null;
         Director director=directorDb.get(name);
         return director;
     }
@@ -60,15 +73,18 @@ public class MovieRepository {
         return allMovies;
    }
    public String deleteDirectorByName(String name){
-      for(List<String> namesList:movieDirector.values()){
-          if(namesList.equals(name)){
-              allMovies.remove(namesList);
-              movieDb.remove(namesList);
-          }
-      }
-      movieDirector.remove(name);
-      directorDb.remove(name);
-      return "Director deleted successfully";
+       for(String director:movieDirector.keySet()){
+           if(director.equals(name)){
+               for (String movie:movieDirector.get(director)){
+                   movieDb.remove(movie);
+                   allMovies.remove(movie);
+               }
+
+           }
+       }
+       movieDirector.remove(name);
+       directorDb.remove(name);
+       return "success";
    }
    public String deleteAllDirectors(){
         for(List<String> movies:movieDirector.values()){
