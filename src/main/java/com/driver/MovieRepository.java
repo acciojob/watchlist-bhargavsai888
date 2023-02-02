@@ -1,24 +1,29 @@
 package com.driver;
 
 import org.springframework.stereotype.Repository;
-
+import java.util.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 @Repository
 public class MovieRepository {
-    HashMap<String,Movie> movieDb=new HashMap<>(); // for movie and its  properties
-    HashMap<String, List<String>> movieDirector=new HashMap<>(); // for director and his movies
+    Map<String, Movie> movieMap ;
+    Map<String, Director> directorMap;
+    Map<String, List<String>> pairMap;
 
-    HashMap<String,Director> directorDb=new HashMap<>();
 
-    List<String>allMovies=new ArrayList<>(); // for All Movies
+    public MovieRepository(){
+        this.pairMap = new HashMap<>();
+        this.movieMap = new HashMap<>();
+        this.directorMap = new HashMap<>();
+    }
+
 
     public String addMovie(Movie movie){
         String name = movie.getName();
-        if(!movieDb.containsKey(name)) {
-            movieDb.put(name, movie);
+        if(!movieMap.containsKey(name)) {
+            movieMap.put(name, movie);
         }
         return "Movie added successfully";
     }
@@ -26,76 +31,82 @@ public class MovieRepository {
     // 2 Add a director
     public String addDirector(Director dir){
         String name = dir.getName();
-        if(!directorDb.containsKey(name)){
-            directorDb.put(name, dir);
+        if(!directorMap.containsKey(name)){
+            directorMap.put(name, dir);
         }
         return "Director added successfully";
     }
-    public String addMovieDirectorPair(String movie,String director){
-        if(!movieDb.containsKey(movie) || !directorDb.containsKey(director)) return "Movie or Director not found in data base";
-        if(movieDirector.containsKey(director)){
-            movieDirector.get(director).add(movie);
+
+    // 3 Pair an existing movie and director
+    public String addMovieDirectorPair( String movieName,  String directorName){
+        if(!movieMap.containsKey(movieName) || !directorMap.containsKey(directorName)) return "Movie or Director not found in data base";
+        if(pairMap.containsKey(directorName)){
+            pairMap.get(directorName).add(movieName);
         }else{
             List<String> ans = new ArrayList<>();
-            ans.add(movie);
-            movieDirector.put(director, ans);
+            ans.add(movieName);
+            pairMap.put(directorName, ans);
         }
         return "Movie-Director Pair added successfully";
     }
-   public Movie getMovieByName(String name){
-        if(!movieDb.containsKey(name)){
-            return null;
-        }
-       Movie movie=movieDb.get(name);
-       return movie;
-   }
-    public Director getDirectorByName(String name){
-        if(!directorDb.containsKey(name))return null;
-        Director director=directorDb.get(name);
-        return director;
+
+    // 4 Get Movie by movie name
+    public Movie getMovieByName( String name){
+        if(!movieMap.containsKey(name)) return null;
+        return movieMap.get(name);
     }
-//   public String getDirectorByMovieName(String name){
-//      if(directorDb.containsKey(name)){
-//           String director=directorDb.get(name).getName();
-//           return director;
-//       }
-//       return null;
-//   }
-   public List<String> getMoviesByDirectorName(String name){
-       for(String director:movieDirector.keySet()){
-           if (director.equals(name)) {
-             return movieDirector.get(name);
-           }
-       }
-       return null;
-   }
-   public List<String> findAllMovies(){
-        return allMovies;
-   }
-   public String deleteDirectorByName(String name){
-       for(String director:movieDirector.keySet()){
-           if(director.equals(name)){
-               for (String movie:movieDirector.get(director)){
-                   movieDb.remove(movie);
-                   allMovies.remove(movie);
-               }
 
-           }
-       }
-       movieDirector.remove(name);
-       directorDb.remove(name);
-       return "success";
-   }
-   public String deleteAllDirectors(){
-        for(List<String> movies:movieDirector.values()){
-           for(String movie:movies){
-               allMovies.remove(movie);
-               movieDb.remove(movie);
-           }
+    // 5 Get Director by director name
+    public Director getDirectorByName( String name){
+        if(!directorMap.containsKey(name))return null;
 
+        return directorMap.get(name);
+    }
+
+    // 6 Get List of movies name for a given director name
+    public List<String> getMoviesByDirectorName( String director){
+        return pairMap.get(director);
+    }
+
+    // 7 Get List of all movies added
+    public List<String> findAllMovies(){
+        List<String> ans = new ArrayList<>();
+        for (String name: movieMap.keySet()) {
+            ans.add(name);
         }
-       movieDirector.clear();
-       directorDb.clear();
-       return "Director deleted successfully";
-   }
+        return ans;
+    }
+
+    // 8 Delete a director and its movies from the records
+    public String deleteDirectorByName( String directorName){
+        List<String> movies = pairMap.get(directorName);
+        for (int i = 0; i < movies.size(); i++) {
+            if(movieMap.containsKey(movies.get(i))){
+                movieMap.remove(movies.get(i));
+            }
+        }
+        pairMap.remove(directorName);
+        if(directorMap.containsKey(directorName)){
+            directorMap.remove(directorName);
+        }
+        return "Director and its movies removed successfully";
+    }
+
+    // 9 Delete all directors and all movies by them from the records
+    public String deleteAllDirectors(){
+        for (String dir: pairMap.keySet()) {
+            List<String> lis = pairMap.get(dir);
+            for (String name: lis) {
+                if(movieMap.containsKey(name)){
+                    movieMap.remove(name);
+                }
+            }
+            directorMap.remove(dir);
+        }
+        for (String d: directorMap.keySet()) {
+            directorMap.remove(d);
+        }
+
+        return "All directors and all of their movies removed successfully";
+    }
 }

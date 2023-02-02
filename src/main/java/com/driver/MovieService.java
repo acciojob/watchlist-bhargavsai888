@@ -7,47 +7,51 @@ import java.util.List;
 
 @Service
 public class MovieService {
-     @Autowired
-      MovieRepository movieRepository;
+    @Autowired
+    MovieRepository movieRepository;
 
-public String addMovie(Movie movie){
-    String message=movieRepository.addMovie(movie);
-    return message;
-}
-public String addDirector(Director director){
-    String message=movieRepository.addDirector(director);
-    return message;
-}
-public String addMovieDirectorPair(String director,String movie){
-    String message=movieRepository.addMovieDirectorPair(director,movie);
-    return message;
-}
-  public  Director getDirectorByName(String name){
-
-    return movieRepository.getDirectorByName(name);
+    public String addMovie(Movie movie){
+        return movieRepository.addMovie(movie);
     }
-public Movie getMovieByName(String name){
-    Movie response=movieRepository.getMovieByName(name);
-    return response;
-}
-//public String getDirectorByMovieName(String name){
-//    String result=movieRepository.getDirectorByMovieName(name);
-//    return result;
-//}
-public List<String> getMoviesByDirectorName(String name){
-    List<String> moviesList=movieRepository.getMoviesByDirectorName(name);
-    return moviesList;
-}
-public List<String> findAllMovies(){
-   List<String> allMovies=movieRepository.findAllMovies();
-   return allMovies;
-}
-public String deleteDirectorByName(String name){
-    String message=movieRepository.deleteDirectorByName(name);
-    return message;
-}
-public String deleteAllDirectors(){
-    String value=movieRepository.deleteAllDirectors();
-    return value;
-}
+
+    // 2 Add a director
+    public String addDirector(Director movie){
+        return movieRepository.addDirector(movie);
+    }
+
+    // 3 Pair an existing movie and director
+    public String addMovieDirectorPair( String movieName,  String directorName){
+        return movieRepository.addMovieDirectorPair(movieName, directorName);
+    }
+
+    // 4 Get Movie by movie name
+    public Movie getMovieByName( String name){
+        return movieRepository.getMovieByName(name);
+    }
+
+    // 5 Get Director by director name
+    public Director getDirectorByName( String name){
+        return movieRepository.getDirectorByName(name);
+    }
+
+    // 6 Get List of movies name for a given director name
+    public List<String> getMoviesByDirectorName(String director){
+        return movieRepository.getMoviesByDirectorName(director);
+    }
+
+    // 7 Get List of all movies added
+    public List<String> findAllMovies(){
+
+        return movieRepository.findAllMovies();
+    }
+
+    // 8 Delete a director and its movies from the records
+    public String deleteDirectorByName( String directorName){
+        return movieRepository.deleteDirectorByName(directorName);
+    }
+
+    // 9 Delete all directors and all movies by them from the records
+    public String deleteAllDirectors(){
+        return movieRepository.deleteAllDirectors();
+    }
 }
